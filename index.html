@@ -16,6 +16,7 @@
   Author 1: Timothy E. Riedel
   Author 2: Kirsten Yanagi
   Author 3: Faith Folorunso
+  Author 4: Doeun Kim
 <!--added my name as author 3--!>
   
   References:
@@ -142,6 +143,13 @@ window.onload = function() { // Waits for browser window to finish loading befor
     } // end of the else statement if file in NOT an image
   }); // end of the fileInput.addEventListener function
  } // end of the window.onload function
+  
+  function colordetecting(){
+   
+   //we can put some codes for the function colordetecting() here and this is linked to the button on the html code below that is on the canvas
+   
+  }
+
  </script>
  </head>
 
@@ -171,7 +179,8 @@ window.onload = function() { // Waits for browser window to finish loading befor
         </script>
      
       <canvas id="dataCanvas" width=600 height=500 style="border:1px solid #d3d3d3;"></canvas> <!--creates the second canvas (need two canvases)-->
-      <script> /* This script initiates the canvas and puts the text on the canvas "dataCanvas" */
+       <button onclick="colordetecting()">Click here</button> 
+     <script> /* This script initiates the canvas and puts the text on the canvas "dataCanvas" */
         var b_canvas = document.getElementById('dataCanvas'); /*refers and calls second canvas by its name; must match with name above */
         var b_context = b_canvas.getContext("2d"); /*makes it a two dimensional canvas*/
         b_context.font = '20pt Calibri'; /*The font of the text will be Calibri and the size will be 20 pt; good size and font because do not want font to be unable to read or
