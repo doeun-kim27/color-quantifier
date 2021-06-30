@@ -256,6 +256,11 @@ function draw_b() {
   	  var a_canvas = document.getElementById("myCanvas"); // the is canvas a so it's getting the canvas element by it's 'a' id
   	  var a_context = a_canvas.getContext("2d"); // this is to make it a 2dimensional rectangle
   	  a_context.strokeRect(50, 25, 50, 50); //tells you the dimensions of the rectangle and how to fill it
+	
+	/*var canvasOffset = $("#canvas").offset();
+	var offsetX = canvasOffset.left;
+	var offsetY = canvasOffset.top;*/
+	
 	  var b_canvas = document.getElementById("myCanvas");
 	  var b_context = b_canvas.getContext("2d");
 	  b_context.strokeRect(0, 0, 10, 10); 
