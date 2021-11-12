@@ -1,35 +1,23 @@
 <!DOCTYPE html>
 
 <html lang="en">
-
-
-
-
 <!-- The following code has been developed by students and/or researchers of the Freshman Research Initiative, DIY Diagnostics Stream at The University of Texas at Austin.  This code is shared for demonstration purposes and should not be considered a product -- it is for entertainment purposes only.  Any user of this code does so at their own risk. Members of the DIY Stream, FRI, and The University of Texas system are not liable for anything related to this code.
-
- 
-
   THIS CODE SHOULD NOT BE USED TO DIAGNOSE ANY KIND OF MEDICAL CONDITION.
 
- 
 
   Further Information:
-
   http://cns.utexas.edu/fri
 
  
 
   Research Educator:
-
   Timothy E. Riedel
-
   triedel@utexas.edu
 
  
 
-  Authors in chronological order of contribution:
-
-  Author 1: Timothy E. Riedel
+  Authors:
+  Author 1: Timothy E. Riedel (Research Educator)
   Author 2: Cathy Li
   Author 3: Anjana Ganesh
   Author 4: Doeun Kim
@@ -37,131 +25,77 @@
   
 
   References:
-
   http://docs.webplatform.org/wiki/concepts/programming/drawing_images_onto_canvas#Loading_the_image_programmatically
-
   http://www.html5rocks.com/en/tutorials/file/dndfiles/
-
   http://www.w3.org/TR/FileAPI/
-
   http://mobilehtml5.org/
-
   http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
 
   
 
   Brief Description of Goal of Code:
-
-  Create an app that allows the user to upload an image from their phone onto a canvas, select two regions of interest (ROI),
-
-  analyze each ROI for RGB percentages, and then output the results in a table.
-
+  App that allows the user to upload an image of ELSIA plate to the app, and computer will analyze the color gradient in each column
  
 
   Known Issues:
-
-  Working on making this compatible with computers (only works on mobile devices with touch screens)
-
-  Would like to allow user to touch and drag a rectangle of desired size
-
-  Still need to code ROI analysis and output
-
+Rectangle gotta be able to read as a column
+Rectangle gotta be able to move on to the next column once it is done reading the previous one
+The result output gotta be the yellow color gradient that will reflect the amount of TNF alpha gradient detected
 -->
 
-
-
-
  <head>
-
   <meta charset="utf-8">
-
   <title>Color Analysis</title>
-
   <meta name="viewport" content="width=device-width, initial-scale=.7">
-
   <meta name="apple-mobile-web-app-capable" content="yes">
-
   <link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
-
   <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
-
   <script src="https://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
-
-
 
 
  <script>
 
   var img;
-
   var docMod = document.lastModified; // gets last modified date and time of the index.html file
-
-  console.log("This file last modified  " + docMod); // displays last modified date and time in the javascipt browser console 
-
-
-
+  //console.log("This file last modified  " + docMod); // displays last modified date and time in the javascipt browser console 
 
 /* detectVerticalSquash & drawImageIOSFix = are functions that are critical due to a flaw in the iPhone camera software that squishes any photos displayed on an HTML5 canvas element. https://github.com/stomita/ios-imagefile-megapixel
-
 */
 
  function detectVerticalSquash(img) {
-
   var iw = img.naturalWidth, ih = img.naturalHeight;
-
   var canvas = document.createElement('canvas');
 
   canvas.width = 1;
-
   canvas.height = ih;
 
   var ctx = canvas.getContext('2d');
-
   ctx.drawImage(img, 0, 0);
-
   var data = ctx.getImageData(0, 0, 1, ih).data;
-
   var sy = 0;
-
   var ey = ih;
-
   var py = ih;
-
+	 
   while (py > sy) {
-
    var alpha = data[(py - 1) * 4 + 3];
-
    if (alpha === 0) {
-
     ey = py;
-
    } 
-
    else {
-
     sy = py;
-
    }
-
    py = (ey + sy) >> 1;
 
   }
-
   var ratio = (py / ih);
-
   return (ratio===0)?1:ratio;
 
  }
 
 
-
-
  function drawImageIOSFix(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh) {
-
   var vertSquashRatio = detectVerticalSquash(img);
-
   ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh / vertSquashRatio);
-
  }
 
 
@@ -170,119 +104,65 @@
 /* window.onload necessary to keep javascripts from running before the app gets a chance to load entirely. */
 
  window.onload = function() {
-
   var fileInput = document.getElementById('fileInput');
-
   var messageDisplayArea = document.getElementById('messageDisplayArea');
 
   /* fileInput.addEventListener looks for any change in the <input> tag indicating that the user has selected a file (picture). */
-
   fileInput.addEventListener('change', function(e) {
-
     var file = fileInput.files[0];
-
     var imageType = /image.*/;
 
     /* if (file.type.match(imageType)) checks that the selected file is indeed an image. */
-
     if (file.type.match(imageType)) {
-
       /* new FileReader(); and reader.onload start some kind of file reading process in javaScript. I do not understand why this is necessary although it may simply slow things down to let the image load. */
-
       var reader = new FileReader();
-
       reader.onload = function(e) {
-
         /* messageDisplayArea.innerHTML not needed but allows you to send a message at this point in the program. */
-
         messageDisplayArea.innerHTML = "You picked an image!";
-
         /* new Image() and img.onload start some kind of new image creation process in javaScript. I do not understand why this is necessary although it may simply slow things down to let the image load. */
 
         img = new Image();
-
         img.onload = function() {
-
           /*This finally draws the image onto the first drawing canvas. The specific canvas is referred to by "context". This is established down in the HTML part of the file just under the first <canvas> tag. If we weren't worried about fixing an iPhone bug we would use context.drawImage(image, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, 600, 500) instead of drawImageIOSFix */
-
-        
-
           drawImageIOSFix(context,img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, 600, 500);
 
+		
+		
+		
+		
+		
+		
 
-
-
-          /*  +++++++++++++++ BEGIN IMAGE PROCESSING +++++++++++++++ */
-
-          /*  ++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-
-
-
-
-          /* PUT ANY CHANGES TO THE JAVASCRIPT HERE  */
-
-          //note: img.onload code below is left over from App 8 assignment
-
-          
-
-           
-
+		
+		
+	/*  +++++++++++++++ BEGINNING OF IMAGE PROCESSING +++++++++++++++ */
            // pulls the RGB image data from point (0,0) on the canvas and spans image's width and height
-
            var imageData = context.getImageData(0, 0, img.width, img.height);
-
            // defines array of points from imageData
-
            var data = imageData.data;
-
-           
-
            // for loop that goes through image data for every pixel (R,G,B,alpha) in data
-
            /* for (var i = 0, n = data.length; i < n; i += 4)
 
            {
-
             // sets red value in pixel data to 0
-
             data[i] = 0;
-
             // sets green value in pixel data to 0
-
             data[i + 1] = 0;
-
            }
-
-           */
-
            // puts new image data from the above for loop onto second canvas starting from point (0,0)
-
            // context2.putImageData(imageData, 0, 0);
 
-          
-
-          
-
         } // end of img.onload
-
-        
-
         img.src = reader.result;
-
       } //  end of reader.onload
-
       
-
       reader.readAsDataURL(file);
 
     } // end of the if statement checking that file is an image
 
     else
-
     {
-
       // this is what happens if the orignial file selected is not an image file
-
       messageDisplayArea.innerHTML = "File not supported!"
 
     } // end of the else statement if file in NOT an image
@@ -293,79 +173,54 @@
 
 
 
-
 //creates array named coords for storing coordinates of ROIs
-
 var coords = [];
-
-
-
-
 //Function that resets canvas with original image and erases any rectangles drawn
-
 function reset()
-
 {
-
    //same code from line 102 that reuploads image onto canvas
-
    drawImageIOSFix(context,img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, 600, 500);
-
    //resets coords array
-
    coords = [];
-
 }
 
 
 
 
 //Creates drawing function for when user touches canvas
-
 /* function draw() {
 
 //if statement for when context is called
 
  if (canvas.getContext) {
-
    //following code only happens if there are >2 rectangles on the canvas
-
    if (coords.length<4){
 
     //defines touch variable to make the following code a little simpler
-
     var touch = event.touches[0];
 
     //Fixes the value of pageX off set by the page scroll
-
     var touchX = touch.pageX-touch.target.offsetLeft;
 
     //Fixes value of pageY. Now rectangles on the canvas appear on the touch target
-
     var touchY = touch.pageY-touch.target.offsetTop;
 
     //Changes color of rectangle border
-
     context.strokeStyle="#FF0000";
 
     //Changes width of rectangle border
-
     context.lineWidth=3;
 
     //Draws 250x300 rectangle outline so that top left corner is where user touches
-
     context.strokeRect(touchX, touchY, 150, 200);
 
     //Adds touchX and touchY to array coords
-
     coords.push(touchX,touchY);
 
     }
 
    //following alert pops up if there are already 2 rectangles on the canvas, prevents user from adding more
-
    else{
-
      alert("Too many rectangles! Press the reset button to start over.");
 
    }
@@ -378,7 +233,9 @@ function reset()
 function draw_b() {
   	  /*var a_canvas = document.getElementById("myCanvas"); // the is canvas a so it's getting the canvas element by it's 'a' id
   	  var a_context = a_canvas.getContext("2d"); // this is to make it a 2dimensional rectangle
+	  
   	  a_context.strokeRect(56, 40, 57, 35); //tells you the dimensions of the rectangle and how to fill it
+	  
 	  var b_canvas = document.getElementById("myCanvas");
 	  var b_context = b_canvas.getContext("2d");
 	  b_context.strokeRect(113, 75, 57, 35); 
@@ -426,9 +283,7 @@ function draw_b() {
 	  p_context.strokeRect(332, 425, 57, 35); */
 	  var x_canvas = document.getElementById("myCanvas");
 	  var x_context = x_canvas.getContext("2d");
-	  x_context.strokeRect(332, 40, 57, 395); 
-
-	
+	  x_context.strokeRect(332, 40, 57, 395); 	
 	  }
 	  
 
@@ -446,67 +301,49 @@ function analyze() {
 
  //var imgData2 = context.getImageData(coords[2]+3,coords[3]+3,150,200);
  var imgData2 = context.getImageData(332, 75, 57, 35); 
-
  var data2 = imgData2.data;
 
  var imgData3 = context.getImageData(332, 110, 57, 35); 
-
  var data3 = imgData3.data;
 
  var imgData4 = context.getImageData(332, 145, 57, 35); 
-
  var data4 = imgData4.data;
 
  var imgData5 = context.getImageData(332, 180, 57, 35); 
-
  var data5 = imgData5.data;
 
  var imgData6 = context.getImageData(332, 215, 57, 35); 
-
  var data6 = imgData6.data;
 
  var imgData7 = context.getImageData(332, 250, 57, 35); 
-
  var data7 = imgData7.data;	
  
  var imgData7 = context.getImageData(332, 285, 57, 35); 
-
  var data7 = imgData7.data;	
  
  var imgData8 = context.getImageData(332, 320, 57, 35); 
-
  var data8 = imgData8.data;	
  
  var imgData9 = context.getImageData(332, 355, 57, 35); 
-
  var data9 = imgData9.data;
 
  var imgData10 = context.getImageData(332, 390, 57, 35); 
-
  var data10 = imgData10.data;
 
  var imgData11 = context.getImageData(332, 425, 57, 35); 
-
- var data11 = imgData11.data; */
-
+ var data11 = imgData11.data; 
  var imgData = context.getImageData(360, 40, 1, 395);
  var data = imgData.data; 
  var blue = imgData.data[2];
  //console.log(imgData12)
- 
 
  //following code calculates percentages for each red, green, blue value in the first ROI
-
  //rgbTotal is the variable for r+g+b = 225
 
  /* var rgbTotal = data[0]+data[1]+data[2];
-
  //calculates percentage of red in ROI (red/225)*100
 
- var redPerc = (data[0]/rgbTotal)*100;
-
-  //fixes the value above to 1 decimal point
-
+ var redPerc = (data[0]/rgbTotal)*100; //fixes the value above to 1 decimal point
   var redFix = redPerc.toFixed(1);
 
  var greenPerc = (data[1]/rgbTotal)*100;
